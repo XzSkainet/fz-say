@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { CURRENCIES } from '../data/currencies'
 import { fetchPeriodData } from '../services/frankfurter'
 import { getCurrencyName } from '../i18n'
@@ -18,21 +18,37 @@ const SNAPSHOTS = [
 
 export default function FreelancerTracker({ baseCurrency, rates }) {
   const [income, setIncome] = useState('3000')
-  const [incomeCurrency, setIncomeCurrency] = useState('USD')
+  const [incomeCurrency, setIncomeCurrency] = useState(() => baseCurrency === 'USD' ? 'EUR' : 'USD')
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(false)
   const cache = useRef({})
 
+  useEffect(() => {
+    if (incomeCurrency === baseCurrency) {
+      setIncomeCurrency(baseCurrency === 'USD' ? 'EUR' : 'USD')
+      setResults(null)
+    }
+  }, [baseCurrency])
+
   const selectableCurrencies = CURRENCIES.filter(c => c.code !== baseCurrency)
+  const isSecondary = CURRENCIES.find(c => c.code === incomeCurrency)?.secondary ?? false
 
   const calculate = async () => {
     const amount = parseFloat(income)
     if (!amount || incomeCurrency === baseCurrency) return
 
-    const key = `${incomeCurrency}-${baseCurrency}-365`
     setLoading(true)
 
     try {
+      if (isSecondary) {
+        const currentRate = rates[incomeCurrency]
+        if (!currentRate) { setResults(null); return }
+        const valueInBase = amount / currentRate
+        setResults({ snapshots: [{ label: 'Hoy', offset: 0, rate: currentRate, valueInBase }], currency: incomeCurrency, amount, secondaryOnly: true })
+        return
+      }
+
+      const key = `${incomeCurrency}-${baseCurrency}-365`
       let historical
       if (cache.current[key]) {
         historical = cache.current[key]
@@ -52,16 +68,14 @@ export default function FreelancerTracker({ baseCurrency, rates }) {
         return historical[dateKey]?.[incomeCurrency] ?? null
       }
 
-      // La tasa en esta API es base→incomeCurrency, necesitamos invertir para convertir income a base
       const snapshotResults = SNAPSHOTS.map(s => {
         const r = getRate(s.offset)
         if (!r) return { ...s, rate: null, valueInBase: null }
-        // rate = 1 baseCurrency = r incomeCurrency → para convertir amount incomeCurrency: amount / r
         const valueInBase = amount / r
         return { ...s, rate: r, valueInBase }
       })
 
-      setResults({ snapshots: snapshotResults, currency: incomeCurrency, amount })
+      setResults({ snapshots: snapshotResults, currency: incomeCurrency, amount, secondaryOnly: false })
     } catch {
       setResults(null)
     } finally {
@@ -120,30 +134,44 @@ export default function FreelancerTracker({ baseCurrency, rates }) {
       {/* Resultados */}
       {results && (
         <div className="space-y-3">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            {results.snapshots.map((s, i) => {
-              const pct = i > 0 && today?.valueInBase && s.valueInBase
-                ? ((today.valueInBase - s.valueInBase) / s.valueInBase) * 100
-                : null
-              const isGain = pct !== null && pct >= 0
+          {results.secondaryOnly ? (
+            <div className="flex items-center gap-3">
+              <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 rounded-xl p-3 flex-1">
+                <p className="text-[10px] text-slate-400 mb-1">Hoy</p>
+                <p className="text-sm font-bold tabular-nums text-blue-700 dark:text-blue-300">
+                  {baseSymbol}{formatMoney(results.snapshots[0].valueInBase)}
+                </p>
+              </div>
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 flex-1">
+                Histórico no disponible para esta moneda — solo contamos con la tasa actual.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {results.snapshots.map((s, i) => {
+                const pct = i > 0 && today?.valueInBase && s.valueInBase
+                  ? ((today.valueInBase - s.valueInBase) / s.valueInBase) * 100
+                  : null
+                const isGain = pct !== null && pct >= 0
 
-              return (
-                <div key={s.label} className={`rounded-xl p-3 ${i === 0 ? 'bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900' : 'bg-gray-50 dark:bg-slate-900'}`}>
-                  <p className="text-[10px] text-slate-400 mb-1">{s.label}</p>
-                  <p className={`text-sm font-bold tabular-nums ${i === 0 ? 'text-blue-700 dark:text-blue-300' : 'text-slate-700 dark:text-slate-300'}`}>
-                    {s.valueInBase ? `${baseSymbol}${formatMoney(s.valueInBase)}` : '—'}
-                  </p>
-                  {pct !== null && (
-                    <p className={`text-[10px] font-bold mt-0.5 ${isGain ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
-                      {isGain ? '+' : ''}{pct.toFixed(1)}% vs hoy
+                return (
+                  <div key={s.label} className={`rounded-xl p-3 ${i === 0 ? 'bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900' : 'bg-gray-50 dark:bg-slate-900'}`}>
+                    <p className="text-[10px] text-slate-400 mb-1">{s.label}</p>
+                    <p className={`text-sm font-bold tabular-nums ${i === 0 ? 'text-blue-700 dark:text-blue-300' : 'text-slate-700 dark:text-slate-300'}`}>
+                      {s.valueInBase ? `${baseSymbol}${formatMoney(s.valueInBase)}` : '—'}
                     </p>
-                  )}
-                </div>
-              )
-            })}
-          </div>
+                    {pct !== null && (
+                      <p className={`text-[10px] font-bold mt-0.5 ${isGain ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
+                        {isGain ? '+' : ''}{pct.toFixed(1)}% vs hoy
+                      </p>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )}
 
-          {today?.valueInBase && results.snapshots[3]?.valueInBase && (
+          {!results.secondaryOnly && today?.valueInBase && results.snapshots[3]?.valueInBase && (
             <div className={`rounded-xl px-4 py-3 text-xs flex items-center gap-2 ${
               today.valueInBase >= results.snapshots[3].valueInBase
                 ? 'bg-green-50 dark:bg-green-950/30 border border-green-100 dark:border-green-900 text-green-700 dark:text-green-400'

@@ -10,6 +10,7 @@ import EvolutionChart from './components/EvolutionChart'
 import CurrencyModal from './components/CurrencyModal'
 import CurrencyCompare from './components/CurrencyCompare'
 import FreelancerTracker from './components/FreelancerTracker'
+import FreelancerReport from './components/FreelancerReport'
 import TripPlanner from './components/TripPlanner'
 import HeroConverter from './components/HeroConverter'
 import TopMovers from './components/TopMovers'
@@ -214,6 +215,8 @@ export default function App() {
               sparklineData={sparklineData}
             />
           </div>
+
+          <FreelancerReport baseCurrency={baseCurrency} />
         </section>
       </main>
 

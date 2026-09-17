@@ -68,6 +68,7 @@ export default function CurrencyModal({ currencyCode, rates, changes, sparklineD
   const [spreadPct, setSpreadPct] = useState(2)
 
   const currency = CURRENCIES.find(c => c.code === currencyCode)
+  const isSecondary = currency?.secondary ?? false
   const rate = rates?.[currencyCode]
   const change = changes?.[currencyCode] ?? 0
   const isPos = change >= 0
@@ -203,18 +204,27 @@ export default function CurrencyModal({ currencyCode, rates, changes, sparklineD
           </div>
 
           {/* Selector período */}
-          <div className="flex gap-1">
-            {PERIODS.map(p => (
-              <button
-                key={p.id}
-                onClick={() => setPeriod(p.id)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  period === p.id ? 'bg-blue-600 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700'
-                }`}
-              >
-                {p.id}
-              </button>
-            ))}
+          <div className="flex gap-1 flex-wrap">
+            {PERIODS.map(p => {
+              const disabled = isSecondary && p.id !== '7D'
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => !disabled && setPeriod(p.id)}
+                  disabled={disabled}
+                  title={disabled ? 'Solo 7D disponible para esta moneda' : undefined}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    disabled
+                      ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed'
+                      : period === p.id
+                        ? 'bg-blue-600 text-white'
+                        : 'text-slate-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700'
+                  }`}
+                >
+                  {p.id}
+                </button>
+              )
+            })}
           </div>
 
           {/* Banner ¿Es buen momento? */}

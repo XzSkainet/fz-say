@@ -43,11 +43,13 @@ export default function TripPlanner({ baseCurrency, rates, sparklineData }) {
   const tripDays = parseInt(days) || 1
   const totalBudget = dailyBudget * tripDays
 
-  const getMonthAgoRate = (code) => {
+  const getPastRate = (code) => {
     const spark = sparklineData?.[code]
     if (!spark?.length) return null
     return spark[0]?.rate ?? null
   }
+
+  const isSecondaryCode = (code) => CURRENCIES.find(c => c.code === code)?.secondary ?? false
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm p-5 space-y-4">
@@ -103,9 +105,11 @@ export default function TripPlanner({ baseCurrency, rates, sparklineData }) {
           const rate = rates[code]
           const dailyLocal = dailyBudget * (rate || 0)
           const totalLocal = totalBudget * (rate || 0)
-          const monthAgoRate = getMonthAgoRate(code)
-          const monthAgoDailyLocal = monthAgoRate ? dailyBudget * monthAgoRate : null
-          const change1M = monthAgoRate && rate ? ((rate - monthAgoRate) / monthAgoRate) * 100 : null
+          const secondary = isSecondaryCode(code)
+          const pastRate = getPastRate(code)
+          const pastDailyLocal = pastRate ? dailyBudget * pastRate : null
+          const pastChange = pastRate && rate ? ((rate - pastRate) / pastRate) * 100 : null
+          const pastLabel = secondary ? 'vs hace 7D' : 'vs hace 1 mes'
           const col = DEST_COLORS[idx] ?? DEST_COLORS[0]
           const currency = CURRENCIES.find(c => c.code === code)
 
@@ -138,13 +142,13 @@ export default function TripPlanner({ baseCurrency, rates, sparklineData }) {
                   <p className="text-[10px] text-slate-400">Total {days} días</p>
                   <p className="text-sm font-bold text-slate-700 dark:text-slate-200 tabular-nums">{formatMoney(totalLocal, code)} {code}</p>
                 </div>
-                {change1M !== null && (
+                {pastChange !== null && (
                   <div className="text-right">
-                    <p className="text-[10px] text-slate-400">vs hace 1 mes</p>
-                    <p className={`text-xs font-bold ${change1M >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
-                      {change1M >= 0 ? '+' : ''}{change1M.toFixed(2)}%
+                    <p className="text-[10px] text-slate-400">{pastLabel}</p>
+                    <p className={`text-xs font-bold ${pastChange >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
+                      {pastChange >= 0 ? '+' : ''}{pastChange.toFixed(2)}%
                       <span className="text-[10px] font-normal text-slate-400 ml-1">
-                        ({change1M >= 0 ? '+' : ''}{formatMoney(dailyLocal - (monthAgoDailyLocal ?? 0), code)} {code}/día)
+                        ({pastChange >= 0 ? '+' : ''}{formatMoney(dailyLocal - (pastDailyLocal ?? 0), code)} {code}/día)
                       </span>
                     </p>
                   </div>

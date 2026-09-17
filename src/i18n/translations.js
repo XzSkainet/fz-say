@@ -19,7 +19,7 @@
       today_change: "Today's change", period_change: 'Period change',
       today: 'today', in: 'in', loading: 'Loading data...',
     },
-    footer: { tagline: 'Global exchange rates in real time', last_update: 'Last update', source: 'Source', ecb_full: 'European Central Bank', via: 'via Frankfurter API', indicative: 'Indicative data' },
+    footer: { tagline: 'Global exchange rates in real time', last_update: 'Last update', source: 'Source', ecb_full: 'European Central Bank', via: 'via Frankfurter API', indicative: 'Indicative data', donate_title: 'Find FZ Say useful?', donate_sub: 'Free, no ads, no sign-up. Want to support the project?', donate_btn: 'Buy me a coffee' },
   },
   es: {
     header: { tagline: 'Tipos de cambio en tiempo real', updated: 'Actualizado', base: 'Base' },
@@ -41,7 +41,7 @@
       today_change: 'Cambio hoy', period_change: 'Variación período',
       today: 'hoy', in: 'en', loading: 'Cargando datos...',
     },
-    footer: { tagline: 'Tipos de cambio globales en tiempo real', last_update: 'Última actualización', source: 'Fuente', ecb_full: 'Banco Central Europeo', via: 'vía Frankfurter API', indicative: 'Datos orientativos' },
+    footer: { tagline: 'Tipos de cambio globales en tiempo real', last_update: 'Última actualización', source: 'Fuente', ecb_full: 'Banco Central Europeo', via: 'vía Frankfurter API', indicative: 'Datos orientativos', donate_title: '¿Te es útil FZ Say?', donate_sub: 'Gratis, sin ads, sin registro. Si quieres apoyar el proyecto:', donate_btn: 'Invítame un café' },
   },
   pt: {
     header: { tagline: 'Taxas de câmbio em tempo real', updated: 'Atualizado', base: 'Base' },
@@ -63,7 +63,7 @@
       today_change: 'Variação hoje', period_change: 'Variação do período',
       today: 'hoje', in: 'em', loading: 'Carregando dados...',
     },
-    footer: { tagline: 'Taxas de câmbio globais em tempo real', last_update: 'Última atualização', source: 'Fonte', ecb_full: 'Banco Central Europeu', via: 'via Frankfurter API', indicative: 'Dados indicativos' },
+    footer: { tagline: 'Taxas de câmbio globais em tempo real', last_update: 'Última atualização', source: 'Fonte', ecb_full: 'Banco Central Europeu', via: 'via Frankfurter API', indicative: 'Dados indicativos', donate_title: 'FZ Say é útil para você?', donate_sub: 'Grátis, sem anúncios, sem cadastro. Quer apoiar o projeto?', donate_btn: 'Pague-me um café' },
   },
   fr: {
     header: { tagline: 'Taux de change en temps réel', updated: 'Mis à jour', base: 'Base' },
@@ -85,7 +85,7 @@
       today_change: 'Variation du jour', period_change: 'Variation de la période',
       today: "aujourd'hui", in: 'en', loading: 'Chargement des données...',
     },
-    footer: { tagline: 'Taux de change mondiaux en temps réel', last_update: 'Dernière mise à jour', source: 'Source', ecb_full: 'Banque Centrale Européenne', via: 'via Frankfurter API', indicative: 'Données indicatives' },
+    footer: { tagline: 'Taux de change mondiaux en temps réel', last_update: 'Dernière mise à jour', source: 'Source', ecb_full: 'Banque Centrale Européenne', via: 'via Frankfurter API', indicative: 'Données indicatives', donate_title: 'FZ Say vous est utile ?', donate_sub: 'Gratuit, sans pub, sans inscription. Vous souhaitez soutenir le projet ?', donate_btn: 'Offrez-moi un café' },
   },
   de: {
     header: { tagline: 'Wechselkurse in Echtzeit', updated: 'Aktualisiert', base: 'Basis' },
@@ -107,7 +107,7 @@
       today_change: 'Heutige Änderung', period_change: 'Periodenänderung',
       today: 'heute', in: 'in', loading: 'Daten werden geladen...',
     },
-    footer: { tagline: 'Globale Wechselkurse in Echtzeit', last_update: 'Letzte Aktualisierung', source: 'Quelle', ecb_full: 'Europäische Zentralbank', via: 'über Frankfurter API', indicative: 'Indikative Daten' },
+    footer: { tagline: 'Globale Wechselkurse in Echtzeit', last_update: 'Letzte Aktualisierung', source: 'Quelle', ecb_full: 'Europäische Zentralbank', via: 'über Frankfurter API', indicative: 'Indikative Daten', donate_title: 'Ist FZ Say nützlich für dich?', donate_sub: 'Kostenlos, keine Werbung, keine Registrierung. Möchtest du das Projekt unterstützen?', donate_btn: 'Kauf mir einen Kaffee' },
   },
   zh: {
     header: { tagline: '实时汇率', updated: '更新于', base: '基准' },
@@ -129,7 +129,7 @@
       today_change: '今日涨跌', period_change: '期间涨跌',
       today: '今日', in: '的', loading: '加载数据中...',
     },
-    footer: { tagline: '实时全球汇率', last_update: '最后更新', source: '数据来源', ecb_full: '欧洲中央银行', via: '通过 Frankfurter API', indicative: '数据仅供参考' },
+    footer: { tagline: '实时全球汇率', last_update: '最后更新', source: '数据来源', ecb_full: '欧洲中央银行', via: '通过 Frankfurter API', indicative: '数据仅供参考', donate_title: 'FZ Say 对您有帮助吗？', donate_sub: '免费、无广告、无需注册。想支持本项目吗？', donate_btn: '请我喝杯咖啡' },
   },
   ja: {
     header: { tagline: 'リアルタイム為替レート', updated: '更新日', base: '基準' },
@@ -151,7 +151,7 @@
       today_change: '本日の変動', period_change: '期間変動',
       today: '本日', in: 'の', loading: 'データ読み込み中...',
     },
-    footer: { tagline: 'リアルタイムのグローバル為替レート', last_update: '最終更新', source: '出典', ecb_full: '欧州中央銀行', via: 'Frankfurter API経由', indicative: '参考データ' },
+    footer: { tagline: 'リアルタイムのグローバル為替レート', last_update: '最終更新', source: '出典', ecb_full: '欧州中央銀行', via: 'Frankfurter API経由', indicative: '参考データ', donate_title: 'FZ Say は役に立っていますか？', donate_sub: '無料・広告なし・登録不要。プロジェクトを応援してみませんか？', donate_btn: 'コーヒーをごちそうする' },
   },
   ko: {
     header: { tagline: '실시간 환율', updated: '업데이트됨', base: '기준' },
@@ -173,7 +173,7 @@
       today_change: '오늘 변동', period_change: '기간 변동',
       today: '오늘', in: '의', loading: '데이터 로딩 중...',
     },
-    footer: { tagline: '실시간 글로벌 환율', last_update: '마지막 업데이트', source: '출처', ecb_full: '유럽중앙은행', via: 'Frankfurter API 경유', indicative: '참고 데이터' },
+    footer: { tagline: '실시간 글로벌 환율', last_update: '마지막 업데이트', source: '출처', ecb_full: '유럽중앙은행', via: 'Frankfurter API 경유', indicative: '참고 데이터', donate_title: 'FZ Say가 도움이 되셨나요?', donate_sub: '무료, 광고 없음, 가입 불필요. 프로젝트를 응원하고 싶으시다면?', donate_btn: '커피 한 잔 사주기' },
   },
 }
 

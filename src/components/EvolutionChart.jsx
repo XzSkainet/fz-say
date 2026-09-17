@@ -34,6 +34,7 @@ export default function EvolutionChart({ baseCurrency, initialSparkline, rates, 
   const [cache, setCache] = useState({})
 
   const selectableCurrencies = CURRENCIES.filter(c => c.code !== baseCurrency)
+  const isSecondary = CURRENCIES.find(c => c.code === currCode)?.secondary ?? false
 
   useEffect(() => {
     const key = `${currCode}-${period}`
@@ -81,7 +82,12 @@ export default function EvolutionChart({ baseCurrency, initialSparkline, rates, 
               <div className="relative flex-shrink-0">
                 <select
                   value={currCode}
-                  onChange={e => { setCurrCode(e.target.value); setPeriod('7D') }}
+                  onChange={e => {
+                    const newCode = e.target.value
+                    const newIsSecondary = CURRENCIES.find(c => c.code === newCode)?.secondary ?? false
+                    setCurrCode(newCode)
+                    if (newIsSecondary) setPeriod('7D')
+                  }}
                   className="appearance-none text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg pl-2.5 pr-6 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer w-[4.5rem]"
                 >
                   {selectableCurrencies.map(c => (
@@ -99,19 +105,26 @@ export default function EvolutionChart({ baseCurrency, initialSparkline, rates, 
         </div>
 
         <div className="flex gap-1">
-          {PERIODS.map(p => (
-            <button
-              key={p.id}
-              onClick={() => setPeriod(p.id)}
-              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
-                period === p.id
-                  ? 'bg-blue-600 text-white'
-                  : 'text-slate-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700'
-              }`}
-            >
-              {p.id}
-            </button>
-          ))}
+          {PERIODS.map(p => {
+            const disabled = isSecondary && p.id !== '7D'
+            return (
+              <button
+                key={p.id}
+                onClick={() => !disabled && setPeriod(p.id)}
+                disabled={disabled}
+                title={disabled ? 'Solo 7D disponible para esta moneda' : undefined}
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+                  disabled
+                    ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed'
+                    : period === p.id
+                      ? 'bg-blue-600 text-white'
+                      : 'text-slate-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700'
+                }`}
+              >
+                {p.id}
+              </button>
+            )
+          })}
         </div>
       </div>
 

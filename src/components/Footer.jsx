@@ -41,7 +41,7 @@ export default function Footer({ lastUpdated }) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 border-t border-gray-50 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500 dark:text-slate-400">
         <div className="flex items-center gap-2">
-          <img src="./logo.svg" alt="FZ Say" className="w-5 h-5 opacity-60" />
+          <img src="./logo.png" alt="FZ Say" className="w-5 h-5 opacity-60" />
           <span className="font-semibold text-slate-700 dark:text-slate-300">FZ Say</span>
           <span>·</span>
           <span>{t('footer.tagline')}</span>
@@ -49,7 +49,11 @@ export default function Footer({ lastUpdated }) {
         <div className="flex items-center gap-4 text-xs flex-wrap justify-center">
           <span>{t('footer.last_update')}: {timeStr}</span>
           <span>·</span>
-          <span>{t('footer.source')}: <a href="https://www.ecb.europa.eu" target="_blank" rel="noreferrer" className="hover:text-blue-500 transition-colors">{t('footer.ecb_full')}</a> {t('footer.via')}</span>
+          <span>
+            {t('footer.source')}: <a href="https://www.ecb.europa.eu" target="_blank" rel="noreferrer" className="hover:text-blue-500 transition-colors">{t('footer.ecb_full')}</a> {t('footer.via')}
+            {' · '}
+            <a href="https://github.com/fawazahmed0/exchange-api" target="_blank" rel="noreferrer" className="hover:text-blue-500 transition-colors">currency-api</a> (LatAm)
+          </span>
           <span>·</span>
           <span>{t('footer.indicative')}</span>
         </div>

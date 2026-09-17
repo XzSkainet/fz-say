@@ -1,4 +1,4 @@
-export const translations = {
+﻿export const translations = {
   en: {
     header: { tagline: 'Real-time exchange rates', updated: 'Updated', base: 'Base' },
     hero: {
@@ -6,7 +6,7 @@ export const translations = {
       title1: 'The world in', title2: 'one glance',
       description: "Exchange rates for the world's major currencies. Real-time ECB data, daily variations and historical charts.",
       no_registration: 'No registration', no_ads: 'No ads',
-      ecb_data: 'ECB data', currencies: '32 currencies',
+      ecb_data: 'ECB data', currencies: '38 currencies',
     },
     gainers: { top: '↑ Top', losers: '↓ Down' },
     section: { title: "World's major currencies", no_data: 'No currencies in this region', search: 'Search currency...' },
@@ -28,7 +28,7 @@ export const translations = {
       title1: 'El mundo en', title2: 'un solo vistazo',
       description: 'Tipos de cambio de las principales monedas del mundo. Datos del BCE en tiempo real, variaciones del día y evolución histórica.',
       no_registration: 'Sin registro', no_ads: 'Sin publicidad',
-      ecb_data: 'Datos del BCE', currencies: '32 monedas',
+      ecb_data: 'Datos del BCE', currencies: '38 monedas',
     },
     gainers: { top: '↑ Top', losers: '↓ Baja' },
     section: { title: 'Principales monedas del mundo', no_data: 'No hay monedas en esta región', search: 'Buscar moneda...' },
@@ -50,7 +50,7 @@ export const translations = {
       title1: 'O mundo em', title2: 'um só olhar',
       description: 'Taxas de câmbio das principais moedas do mundo. Dados do BCE em tempo real, variações diárias e evolução histórica.',
       no_registration: 'Sem cadastro', no_ads: 'Sem publicidade',
-      ecb_data: 'Dados do BCE', currencies: '32 moedas',
+      ecb_data: 'Dados do BCE', currencies: '38 moedas',
     },
     gainers: { top: '↑ Top', losers: '↓ Queda' },
     section: { title: 'Principais moedas do mundo', no_data: 'Sem moedas nesta região', search: 'Buscar moeda...' },
@@ -72,7 +72,7 @@ export const translations = {
       title1: 'Le monde en', title2: "un coup d'œil",
       description: 'Taux de change des principales devises mondiales. Données BCE en temps réel, variations quotidiennes et historique.',
       no_registration: 'Sans inscription', no_ads: 'Sans publicité',
-      ecb_data: 'Données BCE', currencies: '32 devises',
+      ecb_data: 'Données BCE', currencies: '38 devises',
     },
     gainers: { top: '↑ Top', losers: '↓ Baisse' },
     section: { title: 'Principales devises mondiales', no_data: 'Aucune devise dans cette région', search: 'Rechercher une devise...' },
@@ -94,7 +94,7 @@ export const translations = {
       title1: 'Die Welt auf', title2: 'einen Blick',
       description: 'Wechselkurse der wichtigsten Weltwährungen. EZB-Daten in Echtzeit, tägliche Änderungen und historische Entwicklung.',
       no_registration: 'Ohne Registrierung', no_ads: 'Ohne Werbung',
-      ecb_data: 'EZB-Daten', currencies: '32 Währungen',
+      ecb_data: 'EZB-Daten', currencies: '38 Währungen',
     },
     gainers: { top: '↑ Top', losers: '↓ Verluste' },
     section: { title: 'Wichtigste Währungen der Welt', no_data: 'Keine Währungen in dieser Region', search: 'Währung suchen...' },
@@ -116,7 +116,7 @@ export const translations = {
       title1: '一览', title2: '全球汇率',
       description: '全球主要货币汇率。欧洲央行实时数据、每日涨跌及历史走势。',
       no_registration: '无需注册', no_ads: '无广告',
-      ecb_data: '欧洲央行数据', currencies: '32种货币',
+      ecb_data: '欧洲央行数据', currencies: '38种货币',
     },
     gainers: { top: '↑ 涨幅', losers: '↓ 跌幅' },
     section: { title: '全球主要货币', no_data: '该地区暂无货币数据', search: '搜索货币...' },
@@ -138,7 +138,7 @@ export const translations = {
       title1: '世界を', title2: '一目で確認',
       description: '世界の主要通貨の為替レート。ECBのリアルタイムデータ、日次変動、過去の推移をご確認いただけます。',
       no_registration: '登録不要', no_ads: '広告なし',
-      ecb_data: 'ECBデータ', currencies: '32通貨',
+      ecb_data: 'ECBデータ', currencies: '38通貨',
     },
     gainers: { top: '↑ 上昇', losers: '↓ 下落' },
     section: { title: '世界の主要通貨', no_data: 'この地域の通貨データがありません', search: '通貨を検索...' },
@@ -160,7 +160,7 @@ export const translations = {
       title1: '세계를', title2: '한눈에',
       description: '세계 주요 통화의 환율을 확인하세요. ECB 실시간 데이터, 일일 변동폭 및 과거 이력을 제공합니다.',
       no_registration: '가입 불필요', no_ads: '광고 없음',
-      ecb_data: 'ECB 데이터', currencies: '32개 통화',
+      ecb_data: 'ECB 데이터', currencies: '38개 통화',
     },
     gainers: { top: '↑ 상승', losers: '↓ 하락' },
     section: { title: '세계 주요 통화', no_data: '이 지역에 통화가 없습니다', search: '통화 검색...' },
@@ -176,3 +176,4 @@ export const translations = {
     footer: { tagline: '실시간 글로벌 환율', last_update: '마지막 업데이트', source: '출처', ecb_full: '유럽중앙은행', via: 'Frankfurter API 경유', indicative: '참고 데이터' },
   },
 }
+

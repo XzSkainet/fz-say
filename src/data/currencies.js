@@ -22,9 +22,16 @@ export const CURRENCIES = [
   { code: 'ISK', name: 'Corona Islandesa', country: 'is', region: 'europa', symbol: 'kr' },
   { code: 'BGN', name: 'Lev Búlgaro', country: 'bg', region: 'europa', symbol: 'лв' },
   { code: 'TRY', name: 'Lira Turca', country: 'tr', region: 'europa', symbol: '₺' },
-  // Américas
+  // Américas — BCE/Frankfurter
   { code: 'MXN', name: 'Peso Mexicano', country: 'mx', region: 'americas', symbol: '$' },
   { code: 'BRL', name: 'Real Brasileño', country: 'br', region: 'americas', symbol: 'R$' },
+  // Américas — fuente secundaria (no disponibles en BCE)
+  { code: 'ARS', name: 'Peso Argentino', country: 'ar', region: 'americas', symbol: '$', secondary: true },
+  { code: 'CLP', name: 'Peso Chileno', country: 'cl', region: 'americas', symbol: '$', secondary: true },
+  { code: 'COP', name: 'Peso Colombiano', country: 'co', region: 'americas', symbol: '$', secondary: true },
+  { code: 'PEN', name: 'Sol Peruano', country: 'pe', region: 'americas', symbol: 'S/', secondary: true },
+  { code: 'UYU', name: 'Peso Uruguayo', country: 'uy', region: 'americas', symbol: '$', secondary: true },
+  { code: 'BOB', name: 'Boliviano', country: 'bo', region: 'americas', symbol: 'Bs.', secondary: true },
   // Asia
   { code: 'INR', name: 'Rupia India', country: 'in', region: 'asia', symbol: '₹' },
   { code: 'KRW', name: 'Won Surcoreano', country: 'kr', region: 'asia', symbol: '₩' },
@@ -63,4 +70,7 @@ export const ISO_TO_CURRENCY = {
   '372': 'EUR', '380': 'EUR', '428': 'EUR', '440': 'EUR',
   '442': 'EUR', '470': 'EUR', '528': 'EUR', '620': 'EUR',
   '703': 'EUR', '705': 'EUR', '724': 'EUR',
+  // LatAm (fuente secundaria)
+  '032': 'ARS', '152': 'CLP', '170': 'COP',
+  '604': 'PEN', '858': 'UYU', '068': 'BOB',
 }

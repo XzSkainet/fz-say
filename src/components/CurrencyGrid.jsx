@@ -4,7 +4,7 @@ import { CURRENCIES } from '../data/currencies'
 import { t, getCurrencyName } from '../i18n'
 import CurrencyCard from './CurrencyCard'
 
-const BIG = ['JPY', 'KRW', 'IDR', 'ISK', 'HUF']
+const BIG = ['JPY', 'KRW', 'IDR', 'ISK', 'HUF', 'ARS', 'CLP', 'COP']
 const formatRate = (rate, code) => {
   if (!rate) return '—'
   if (BIG.includes(code) || rate >= 100) return rate.toFixed(2)
@@ -115,7 +115,6 @@ export default function CurrencyGrid({ rates, changes, sparklineData, baseCurren
 
   const filtered = CURRENCIES.filter(c => {
     if (c.code === baseCurrency) return false
-    if (!rates[c.code]) return false
     if (selectedRegion !== 'all' && c.region !== selectedRegion) return false
     if (search.trim()) {
       const q = search.toLowerCase()

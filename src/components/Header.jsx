@@ -25,7 +25,7 @@ export default function Header({ darkMode, onToggleDark, baseCurrency, onChangeB
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
 
         <div className="flex items-center gap-3 flex-shrink-0">
-          <img src="./logo.svg" alt="FZ Say" className="w-8 h-8" />
+          <img src="./logo.png" alt="FZ Say" className="w-8 h-8" />
           <div>
             <span className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">FZ Say</span>
             <span className="hidden sm:inline text-sm text-slate-400 ml-2">{t('header.tagline')}</span>

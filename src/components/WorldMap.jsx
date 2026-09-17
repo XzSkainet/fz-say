@@ -29,6 +29,7 @@ export default function WorldMap({ rates, changes, baseCurrency, darkMode, onSel
 
   const topCountries = CURRENCIES
     .filter(c => c.code !== baseCurrency && rates[c.code])
+    .sort((a, b) => Math.abs(changes[b.code] ?? 0) - Math.abs(changes[a.code] ?? 0))
     .slice(0, 8)
 
   const formatRate = (rate, code) => {

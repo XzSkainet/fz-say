@@ -7,7 +7,7 @@ const INNER_TRIGGER =
 
 const formatResult = (value, code) => {
   if (value === null || value === undefined || isNaN(value)) return '—'
-  const big = ['JPY', 'KRW', 'IDR', 'ISK', 'HUF']
+  const big = ['JPY', 'KRW', 'IDR', 'ISK', 'HUF', 'ARS', 'CLP', 'COP']
   const decimals = big.includes(code) || value >= 100 ? 2 : 4
   return value.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
 }

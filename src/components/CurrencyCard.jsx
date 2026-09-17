@@ -3,7 +3,7 @@ import { AreaChart, Area, YAxis, ResponsiveContainer } from 'recharts'
 import NumberFlow from '@number-flow/react'
 import { getCurrencyName } from '../i18n'
 
-const BIG = ['JPY', 'KRW', 'IDR', 'ISK', 'HUF']
+const BIG = ['JPY', 'KRW', 'IDR', 'ISK', 'HUF', 'ARS', 'CLP', 'COP']
 
 const formatRate = (rate, code) => {
   if (!rate) return '—'
@@ -131,7 +131,7 @@ export default function CurrencyCard({ currency, rate, change, sparkline, baseCu
               : '—'}
             {rate && <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 ml-1">{symbol}</span>}
           </p>
-          <div className="flex items-center gap-1.5 mt-0.5">
+          {rate && <div className="flex items-center gap-1.5 mt-0.5">
             <span className={`inline-flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
               isPositive
                 ? 'bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-400'
@@ -152,9 +152,9 @@ export default function CurrencyCard({ currency, rate, change, sparkline, baseCu
                 </span>
               )
             )}
-          </div>
+          </div>}
           {/* Barra de rango 7D */}
-          {rangePosition !== null && (
+          {rate && rangePosition !== null && (
             <div className="mt-2">
               <div className="relative h-[3px] bg-gray-100 dark:bg-slate-700 rounded-full">
                 <div

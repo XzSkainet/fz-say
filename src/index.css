@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-gray-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300;
+    margin: 0;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+/* Ticker de gainers/losers */
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-ticker { animation: ticker-scroll 28s linear infinite; }
+.animate-ticker:hover { animation-play-state: paused; }
+
+/* Animaciones de iconos de tendencia — revertir: borrar este bloque */
+@keyframes float-up {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes float-down {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(3px); }
+}
+@keyframes glow-green {
+  0%, 100% { filter: drop-shadow(0 0 0px #16a34a); }
+  50% { filter: drop-shadow(0 0 4px #16a34a); }
+}
+@keyframes glow-red {
+  0%, 100% { filter: drop-shadow(0 0 0px #dc2626); }
+  50% { filter: drop-shadow(0 0 4px #dc2626); }
+}
+.trend-up-anim {
+  animation: float-up 1.8s ease-in-out infinite, glow-green 1.8s ease-in-out infinite;
+}
+.trend-down-anim {
+  animation: float-down 1.8s ease-in-out infinite, glow-red 1.8s ease-in-out infinite;
+}

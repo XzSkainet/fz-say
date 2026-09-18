@@ -18,6 +18,8 @@ FZ Say is a free currency exchange dashboard with rates for 38 currencies update
 - Explore an interactive world map colored by daily change
 - Filter currencies by region — Americas, Europe, Asia, Oceania, Africa
 - Estimate freelance income variance over time
+- Log payment history with the exact historical rate for each collection date
+- Export your payment log to a styled Excel (.xlsx) file or PDF
 - Plan a trip budget for up to 3 destinations
 
 ## Data sources
@@ -26,3 +28,7 @@ FZ Say is a free currency exchange dashboard with rates for 38 currencies update
 - **LatAm currencies (6):** ARS, CLP, COP, PEN, UYU, BOB via [currency-api](https://github.com/fawazahmed0/exchange-api). Updated daily, 7-day history.
 
 All values are indicative.
+
+## Languages
+
+Interface available in 8 languages: Spanish, English, Portuguese, French, German, Chinese, Japanese, Korean.

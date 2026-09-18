@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://xzskainet.github.io/fz-say/sitemap.xml

@@ -1,7 +1,6 @@
 // Fuente secundaria para monedas no cubiertas por el BCE (Frankfurter)
 // API gratuita sin key, sin límite: https://github.com/fawazahmed0/exchange-api
 const CDN = 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api'
-const FALLBACK = 'https://currency-api.pages.dev'
 
 const dateNDaysAgo = (n) => {
   const d = new Date()
@@ -12,17 +11,21 @@ const dateNDaysAgo = (n) => {
 const fetchDate = async (date, base) => {
   const b = base.toLowerCase()
   const path = `/v1/currencies/${b}.json`
-  const primaryUrl = `${CDN}@${date}${path}`
-  const fallbackUrl = `https://${date}.currency-api.pages.dev${path}`
 
   try {
-    const res = await fetch(primaryUrl)
+    const res = await fetch(`${CDN}@${date}${path}`)
     if (res.ok) return res.json()
   } catch {}
 
-  const res = await fetch(fallbackUrl)
-  if (!res.ok) throw new Error(`LatAm API no disponible para ${date}`)
-  return res.json()
+  // pages.dev fallback solo para fechas históricas (bloquea CORS desde github.io para fechas recientes)
+  if (date !== 'latest') {
+    try {
+      const res = await fetch(`https://${date}.currency-api.pages.dev${path}`)
+      if (res.ok) return res.json()
+    } catch {}
+  }
+
+  throw new Error(`LatAm API no disponible para ${date}`)
 }
 
 // Fetches 7 días en paralelo → rates + changes + sparklineData para los códigos dados
@@ -30,7 +33,8 @@ export const fetchSecondaryRates = async (base, codes) => {
   const b = base.toLowerCase()
 
   // Últimos 7 días en orden ascendente (más antiguo primero, para sparkline)
-  const dates = Array.from({ length: 7 }, (_, i) => dateNDaysAgo(6 - i))
+  // 'latest' para hoy: evita 404 en CDN cuando el paquete aún no se publicó el día actual
+  const dates = Array.from({ length: 7 }, (_, i) => i < 6 ? dateNDaysAgo(6 - i) : 'latest')
 
   // Todas en paralelo, sin límite de peticiones en esta CDN
   const results = await Promise.allSettled(
@@ -44,7 +48,7 @@ export const fetchSecondaryRates = async (base, codes) => {
   results.forEach((result, i) => {
     if (result.status !== 'fulfilled') return
     const dayRates = result.value?.[b] ?? {}
-    const date = dates[i]
+    const date = result.value?.date ?? dates[i]
     codes.forEach(code => {
       const r = dayRates[code.toLowerCase()]
       if (r != null) sparklineData[code].push({ date, rate: r })

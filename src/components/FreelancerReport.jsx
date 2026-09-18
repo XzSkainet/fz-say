@@ -83,6 +83,7 @@ const fetchHistoricalRate = async (date, baseCurrency, incomeCurrency) => {
 export default function FreelancerReport({ baseCurrency }) {
   const [entries, setEntries] = useState(loadEntries)
   const [confirmClear, setConfirmClear] = useState(false)
+  const [exporting, setExporting] = useState(false)
   const clearTimer = useRef(null)
   const baseSymbol = CURRENCIES.find(c => c.code === baseCurrency)?.symbol ?? ''
   const defaultIncome = baseCurrency === 'USD' ? 'EUR' : 'USD'
@@ -148,145 +149,73 @@ export default function FreelancerReport({ baseCurrency }) {
 
   const canFetch = (e) => parseFloat(e.amount) > 0 && e.date && e.date <= todayStr() && e.status !== 'loading'
 
-  const exportXLS = () => {
+  const exportXLSX = async () => {
+    if (exporting) return
+    setExporting(true)
+    try {
     const done = entries.filter(e => e.status === 'done')
-    const x = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    const { default: writeXlsxFile } = await import('write-excel-file/browser')
     const dateNow = new Date().toLocaleDateString(undefined, { day: '2-digit', month: 'long', year: 'numeric' })
-    const B = `<Borders><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/></Borders>`
 
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<?mso-application progid="Excel.Sheet"?>
-<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
-  <Styles>
-    <Style ss:ID="title">
-      <Font ss:Bold="1" ss:Color="#FFFFFF" ss:Size="15"/>
-      <Interior ss:Color="#1D4ED8" ss:Pattern="Solid"/>
-      <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
-    </Style>
-    <Style ss:ID="subtitle">
-      <Font ss:Italic="1" ss:Color="#3B82F6" ss:Size="9"/>
-      <Interior ss:Color="#EFF6FF" ss:Pattern="Solid"/>
-      <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
-    </Style>
-    <Style ss:ID="hdr">
-      <Font ss:Bold="1" ss:Color="#FFFFFF" ss:Size="10"/>
-      <Interior ss:Color="#1E40AF" ss:Pattern="Solid"/>
-      <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
-      ${B}
-    </Style>
-    <Style ss:ID="hdr_r">
-      <Font ss:Bold="1" ss:Color="#FFFFFF" ss:Size="10"/>
-      <Interior ss:Color="#1E40AF" ss:Pattern="Solid"/>
-      <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
-      ${B}
-    </Style>
-    <Style ss:ID="hdr_c">
-      <Font ss:Bold="1" ss:Color="#FFFFFF" ss:Size="10"/>
-      <Interior ss:Color="#1E40AF" ss:Pattern="Solid"/>
-      <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-      ${B}
-    </Style>
-    <Style ss:ID="dt">
-      <Font ss:Color="#475569" ss:Size="10"/>
-      <Alignment ss:Vertical="Center"/>
-      ${B}
-    </Style>
-    <Style ss:ID="nt">
-      <Font ss:Italic="1" ss:Color="#94A3B8" ss:Size="10"/>
-      <Alignment ss:Vertical="Center"/>
-      ${B}
-    </Style>
-    <Style ss:ID="am">
-      <Font ss:Bold="1" ss:Color="#1E293B" ss:Size="10"/>
-      <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
-      <NumberFormat ss:Format="#,##0.00"/>
-      ${B}
-    </Style>
-    <Style ss:ID="cu">
-      <Font ss:Bold="1" ss:Color="#2563EB" ss:Size="10"/>
-      <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-      ${B}
-    </Style>
-    <Style ss:ID="rt">
-      <Font ss:Color="#94A3B8" ss:Size="9"/>
-      <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
-      <NumberFormat ss:Format="0.0000"/>
-      ${B}
-    </Style>
-    <Style ss:ID="mn">
-      <Font ss:Bold="1" ss:Color="#16A34A" ss:Size="11"/>
-      <Interior ss:Color="#F0FDF4" ss:Pattern="Solid"/>
-      <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
-      <NumberFormat ss:Format="#,##0.00"/>
-      ${B}
-    </Style>
-    <Style ss:ID="tlbl">
-      <Font ss:Bold="1" ss:Color="#15803D" ss:Size="11"/>
-      <Interior ss:Color="#DCFCE7" ss:Pattern="Solid"/>
-      <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
-      <Borders><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#86EFAC"/><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#86EFAC"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#86EFAC"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#86EFAC"/></Borders>
-    </Style>
-    <Style ss:ID="ttl">
-      <Font ss:Bold="1" ss:Color="#15803D" ss:Size="14"/>
-      <Interior ss:Color="#DCFCE7" ss:Pattern="Solid"/>
-      <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
-      <NumberFormat ss:Format="#,##0.00"/>
-      <Borders><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#86EFAC"/><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#86EFAC"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#86EFAC"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#86EFAC"/></Borders>
-    </Style>
-    <Style ss:ID="foot">
-      <Font ss:Italic="1" ss:Color="#CBD5E1" ss:Size="8"/>
-      <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
-    </Style>
-  </Styles>
-  <Worksheet ss:Name="Cobros">
-    <Table>
-      <Column ss:Width="100"/>
-      <Column ss:Width="200"/>
-      <Column ss:Width="100"/>
-      <Column ss:Width="70"/>
-      <Column ss:Width="170"/>
-      <Column ss:Width="130"/>
-      <Row ss:Height="38">
-        <Cell ss:StyleID="title" ss:MergeAcross="5"><Data ss:Type="String">FZ Say — Registro de Cobros</Data></Cell>
-      </Row>
-      <Row ss:Height="20">
-        <Cell ss:StyleID="subtitle" ss:MergeAcross="5"><Data ss:Type="String">Generado el ${x(dateNow)}  ·  Moneda base: ${x(baseCurrency)}  ·  ${doneCount} cobro${doneCount !== 1 ? 's' : ''}</Data></Cell>
-      </Row>
-      <Row ss:Height="10"/>
-      <Row ss:Height="26">
-        <Cell ss:StyleID="hdr"><Data ss:Type="String">Fecha</Data></Cell>
-        <Cell ss:StyleID="hdr"><Data ss:Type="String">Nota / Referencia</Data></Cell>
-        <Cell ss:StyleID="hdr_r"><Data ss:Type="String">Monto</Data></Cell>
-        <Cell ss:StyleID="hdr_c"><Data ss:Type="String">Moneda</Data></Cell>
-        <Cell ss:StyleID="hdr_r"><Data ss:Type="String">Tasa (1 M = X ${x(baseCurrency)})</Data></Cell>
-        <Cell ss:StyleID="hdr_r"><Data ss:Type="String">En ${x(baseCurrency)}</Data></Cell>
-      </Row>
-      ${done.map(e => `<Row ss:Height="21">
-        <Cell ss:StyleID="dt"><Data ss:Type="String">${x(e.date)}</Data></Cell>
-        <Cell ss:StyleID="nt"><Data ss:Type="String">${x(e.note)}</Data></Cell>
-        <Cell ss:StyleID="am"><Data ss:Type="Number">${parseFloat(e.amount) || 0}</Data></Cell>
-        <Cell ss:StyleID="cu"><Data ss:Type="String">${x(e.currency)}</Data></Cell>
-        <Cell ss:StyleID="rt"><Data ss:Type="Number">${e.rate ?? 0}</Data></Cell>
-        <Cell ss:StyleID="mn"><Data ss:Type="Number">${e.baseAmount ?? 0}</Data></Cell>
-      </Row>`).join('\n')}
-      <Row ss:Height="26">
-        <Cell ss:StyleID="tlbl" ss:MergeAcross="4"><Data ss:Type="String">TOTAL — ${doneCount} cobro${doneCount !== 1 ? 's' : ''}</Data></Cell>
-        <Cell ss:StyleID="ttl" ss:Index="6"><Data ss:Type="Number">${total}</Data></Cell>
-      </Row>
-      <Row ss:Height="8"/>
-      <Row ss:Height="16">
-        <Cell ss:StyleID="foot" ss:MergeAcross="5"><Data ss:Type="String">Tasas orientativas. Fuente: BCE (Frankfurter API) y currency-api para LatAm. FZ Say no es asesor financiero.</Data></Cell>
-      </Row>
-    </Table>
-  </Worksheet>
-</Workbook>`
+    const B = { borderColor: '#E2E8F0', borderStyle: 'thin' }
+    const BG = { topBorderColor: '#86EFAC', topBorderStyle: 'medium', bottomBorderColor: '#86EFAC', bottomBorderStyle: 'thin', leftBorderColor: '#86EFAC', leftBorderStyle: 'thin', rightBorderColor: '#86EFAC', rightBorderStyle: 'thin' }
 
-    const blob = new Blob([xml], { type: 'application/vnd.ms-excel;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url; a.download = `fzsay-cobros-${todayStr()}.xls`
-    document.body.appendChild(a); a.click()
-    document.body.removeChild(a); URL.revokeObjectURL(url)
+    const TITLE  = { fontWeight: 'bold', fontSize: 15, color: '#FFFFFF', backgroundColor: '#1D4ED8', alignVertical: 'center' }
+    const SUB    = { fontStyle: 'italic', fontSize: 9, color: '#3B82F6', backgroundColor: '#EFF6FF', alignVertical: 'center' }
+    const HDR    = (align) => ({ fontWeight: 'bold', fontSize: 10, color: '#FFFFFF', backgroundColor: '#1E40AF', align, alignVertical: 'center', borderColor: '#1E40AF', borderStyle: 'thin' })
+    const DT     = { fontSize: 10, color: '#475569', alignVertical: 'center', ...B }
+    const NT     = { fontStyle: 'italic', fontSize: 10, color: '#94A3B8', alignVertical: 'center', ...B }
+    const AM     = { fontWeight: 'bold', fontSize: 10, color: '#1E293B', align: 'right', alignVertical: 'center', format: '#,##0.00', ...B }
+    const CU     = { fontWeight: 'bold', fontSize: 10, color: '#2563EB', align: 'center', alignVertical: 'center', ...B }
+    const RT     = { fontSize: 9, color: '#94A3B8', align: 'right', alignVertical: 'center', format: '0.0000', ...B }
+    const MN     = { fontWeight: 'bold', fontSize: 11, color: '#16A34A', backgroundColor: '#F0FDF4', align: 'right', alignVertical: 'center', format: '#,##0.00', ...B }
+    const TLBL   = { fontWeight: 'bold', fontSize: 11, color: '#15803D', backgroundColor: '#DCFCE7', align: 'right', alignVertical: 'center', ...BG }
+    const TTOTAL = { fontWeight: 'bold', fontSize: 14, color: '#15803D', backgroundColor: '#DCFCE7', align: 'right', alignVertical: 'center', format: '#,##0.00', ...BG }
+    const FOOT   = { fontStyle: 'italic', fontSize: 8, color: '#CBD5E1', alignVertical: 'center' }
+
+    const data = [
+      [{ value: 'FZ Say — Registro de Cobros', span: 6, ...TITLE }],
+      [{ value: `Generado el ${dateNow}  ·  Moneda base: ${baseCurrency}  ·  ${doneCount} cobro${doneCount !== 1 ? 's' : ''}`, span: 6, ...SUB }],
+      [{ value: '' }],
+      [
+        { value: 'Fecha',                          ...HDR('left') },
+        { value: 'Nota / Referencia',              ...HDR('left') },
+        { value: 'Monto',                          ...HDR('right') },
+        { value: 'Moneda',                         ...HDR('center') },
+        { value: `Tasa (1 M = X ${baseCurrency})`, ...HDR('right') },
+        { value: `En ${baseCurrency}`,             ...HDR('right') },
+      ],
+      ...done.map(e => [
+        { value: e.date,                    type: String, ...DT },
+        { value: e.note || '',              type: String, ...NT },
+        { value: parseFloat(e.amount) || 0, type: Number, ...AM },
+        { value: e.currency,                type: String, ...CU },
+        { value: e.rate ?? 0,               type: Number, ...RT },
+        { value: e.baseAmount ?? 0,         type: Number, ...MN },
+      ]),
+      [
+        { value: `TOTAL — ${doneCount} cobro${doneCount !== 1 ? 's' : ''}`, span: 5, ...TLBL },
+        { value: total, type: Number, ...TTOTAL },
+      ],
+      [{ value: '' }],
+      [{ value: 'Tasas orientativas. Fuente: BCE (Frankfurter API) y currency-api para LatAm. FZ Say no es asesor financiero.', span: 6, ...FOOT }],
+    ]
+
+    await writeXlsxFile(data, {
+      columns: [{ width: 12 }, { width: 28 }, { width: 12 }, { width: 8 }, { width: 22 }, { width: 16 }],
+      rows: [
+        { height: 38 }, { height: 20 }, { height: 8 }, { height: 26 },
+        ...done.map(() => ({ height: 21 })),
+        { height: 26 }, { height: 8 }, { height: 16 },
+      ],
+      fileName: `fzsay-cobros-${todayStr()}.xlsx`,
+    })
+    } catch (err) {
+      console.error('Error exportando XLSX:', err)
+    } finally {
+      setExporting(false)
+    }
+
   }
 
   const exportPDF = () => {
@@ -355,13 +284,21 @@ export default function FreelancerReport({ baseCurrency }) {
             {doneCount > 0 && (
               <>
                 <button
-                  onClick={exportXLS}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 border border-emerald-200 dark:border-emerald-800 transition-colors"
+                  onClick={exportXLSX}
+                  disabled={exporting}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 border border-emerald-200 dark:border-emerald-800 transition-colors disabled:opacity-60"
                 >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M3 14h18M10 3v18M14 3v18M3 6a3 3 0 013-3h12a3 3 0 013 3v12a3 3 0 01-3 3H6a3 3 0 01-3-3V6z" />
-                  </svg>
-                  XLS
+                  {exporting ? (
+                    <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                    </svg>
+                  ) : (
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M3 14h18M10 3v18M14 3v18M3 6a3 3 0 013-3h12a3 3 0 013 3v12a3 3 0 01-3 3H6a3 3 0 01-3-3V6z" />
+                    </svg>
+                  )}
+                  {exporting ? '...' : 'XLSX'}
                 </button>
                 <button
                   onClick={exportPDF}

@@ -33,8 +33,8 @@ const TopItem = ({ code, change, isGainer, rank, rates, onSelect }) => {
               <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{getCurrencyName(code)}</p>
             </div>
           </div>
-          <div className="text-right flex-shrink-0">
-            <p className={`text-xl font-black tabular-nums ${isGainer ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
+          <div className="text-right flex-shrink-0 ml-1">
+            <p className={`text-base sm:text-xl font-black tabular-nums leading-tight ${isGainer ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
               {change >= 0 ? '+' : ''}{change.toFixed(2)}%
             </p>
             <p className="text-[10px] text-slate-400 tabular-nums">{formatRate(rate, code)}</p>
